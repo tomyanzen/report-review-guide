@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="画像診断レポート遡及的確認プロジェクトのレビュワー向け A・B判定ガイド（神戸市立医療センター中央市民病院 医療安全管理室）">
+<meta name="theme-color" content="#1B4B7A">
+<title>画像診断レポート判定ガイド</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+
+<style>
+:root{
+  --ground:#F5F7FA;
+  --surface:#FFFFFF;
+  --surface-2:#EDF1F6;
+  --ink:#16202E;
+  --ink-2:#586675;
+  --ink-3:#8593A1;
+  --rule:#DBE2EA;
+  --rule-2:#C2CDD9;
+  --navy:#1B4B7A;
+  --navy-deep:#123457;
+  --navy-soft:#E6EFF7;
+  --a:#0E6B5C;
+  --a-soft:#E0EFEB;
+  --b:#A8322B;
+  --b-soft:#FAE8E5;
+  --focus:#2F80D6;
+  --shadow:0 1px 2px rgba(22,32,46,.06), 0 6px 18px rgba(22,32,46,.07);
+
+  --f-jp:"Zen Kaku Gothic New", "Hiragino Sans", "Yu Gothic", system-ui, sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0E141B;
+    --surface:#161F29;
+    --surface-2:#1D2833;
+    --ink:#E7EDF3;
+    --ink-2:#9AA8B6;
+    --ink-3:#76838F;
+    --rule:#27333E;
+    --rule-2:#3A4854;
+    --navy:#6BA6DC;
+    --navy-deep:#A9CCEC;
+    --navy-soft:#17293C;
+    --a:#4CBFA6;
+    --a-soft:#112E29;
+    --b:#E88378;
+    --b-soft:#321F1C;
+    --focus:#6BA6DC;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 6px 18px rgba(0,0,0,.3);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0E141B;
+  --surface:#161F29;
+  --surface-2:#1D2833;
+  --ink:#E7EDF3;
+  --ink-2:#9AA8B6;
+  --ink-3:#76838F;
+  --rule:#27333E;
+  --rule-2:#3A4854;
+  --navy:#6BA6DC;
+  --navy-deep:#A9CCEC;
+  --navy-soft:#17293C;
+  --a:#4CBFA6;
+  --a-soft:#112E29;
+  --b:#E88378;
+  --b-soft:#321F1C;
+  --focus:#6BA6DC;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 6px 18px rgba(0,0,0,.3);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--ground);
+  color:var(--ink);
+  font-family:var(--f-jp);
+  font-size:16px;
+  line-height:1.7;
+  -webkit-text-size-adjust:100%;
+}
+.wrap{
+  max-width:460px;
+  margin:0 auto;
+  padding:20px 16px 56px;
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+:focus-visible{outline:2px solid var(--focus); outline-offset:2px; border-radius:2px}
+
+/* ── header ── */
+.masthead{display:flex; flex-direction:column; gap:6px}
+.eyebrow{
+  font-family:var(--f-mono); font-size:11px; font-weight:600;
+  letter-spacing:.14em; text-transform:uppercase;
+  color:var(--navy);
+}
+h1{
+  margin:0; font-size:22px; line-height:1.35; font-weight:700;
+  letter-spacing:.01em; text-wrap:balance;
+}
+.lede{margin:2px 0 0; font-size:13.5px; color:var(--ink-2); line-height:1.65}
+.privacy{
+  margin-top:10px; padding:9px 12px;
+  background:var(--surface-2); border-left:3px solid var(--rule-2);
+  font-size:12px; line-height:1.6; color:var(--ink-2);
+}
+.privacy b{color:var(--ink); font-weight:500}
+
+/* ── trail（答えた設問の履歴）── */
+.trail{display:flex; flex-direction:column; gap:0}
+.trail:empty{display:none}
+.trail-item{
+  position:relative;
+  display:flex; align-items:baseline; gap:10px;
+  width:100%; text-align:left;
+  padding:7px 10px 7px 14px;
+  background:none; border:0; border-left:2px solid var(--rule-2);
+  font:inherit; font-size:13px; color:var(--ink-2);
+  cursor:pointer;
+}
+.trail-item:hover{background:var(--surface-2)}
+.trail-mark{
+  font-family:var(--f-mono); font-size:11px; font-weight:600;
+  color:var(--navy); flex:0 0 auto; letter-spacing:.02em;
+}
+.trail-ans{color:var(--ink); font-weight:500}
+.trail-back{
+  margin-left:auto; flex:0 0 auto;
+  font-size:11px; color:var(--ink-3);
+}
+
+/* ── 設問パネル ── */
+.panel{
+  background:var(--surface);
+  border:1px solid var(--rule);
+  border-left:4px solid var(--navy);
+  box-shadow:var(--shadow);
+  padding:18px 16px;
+  display:flex; flex-direction:column; gap:14px;
+}
+.q-mark{
+  font-family:var(--f-mono); font-size:12px; font-weight:600;
+  letter-spacing:.1em; color:var(--navy);
+}
+.q-text{margin:0; font-size:18px; line-height:1.55; font-weight:700; text-wrap:balance}
+.q-hint{margin:0; font-size:13px; line-height:1.7; color:var(--ink-2)}
+
+.opts{display:flex; flex-direction:column; gap:9px}
+.opt{
+  display:flex; flex-direction:column; gap:2px;
+  width:100%; text-align:left;
+  min-height:52px; padding:11px 14px;
+  background:var(--surface); color:var(--ink);
+  border:1.5px solid var(--rule-2);
+  font:inherit; cursor:pointer;
+  transition:border-color .12s, background .12s;
+}
+.opt:hover{border-color:var(--navy); background:var(--navy-soft)}
+.opt-label{font-size:16px; font-weight:700; line-height:1.4}
+.opt-sub{font-size:12.5px; color:var(--ink-2); line-height:1.5}
+
+/* ── 用語解説 ── */
+details.help{border-top:1px solid var(--rule); padding-top:12px}
+details.help>summary{
+  cursor:pointer; list-style:none;
+  font-size:13px; font-weight:500; color:var(--navy);
+  display:flex; align-items:center; gap:7px;
+}
+details.help>summary::-webkit-details-marker{display:none}
+details.help>summary::before{
+  content:"?"; flex:0 0 auto;
+  width:18px; height:18px; border-radius:50%;
+  background:var(--navy-soft); color:var(--navy);
+  font-family:var(--f-mono); font-size:11px; font-weight:600;
+  display:grid; place-items:center;
+}
+details.help[open]>summary{margin-bottom:10px}
+.help-body{font-size:13px; line-height:1.75; color:var(--ink-2)}
+.help-body p{margin:0 0 8px}
+.help-body p:last-child{margin-bottom:0}
+.help-body ul{margin:0; padding-left:1.15em}
+.help-body li{margin-bottom:3px}
+.kw{display:flex; flex-wrap:wrap; gap:5px; margin-top:8px}
+.kw span{
+  font-size:12px; padding:3px 8px;
+  background:var(--navy-soft); color:var(--navy-deep);
+  border-radius:2px; white-space:nowrap;
+}
+
+/* ── 判定結果 ── */
+.verdict{
+  background:var(--surface);
+  border:1px solid var(--rule);
+  border-left:4px solid var(--vc);
+  box-shadow:var(--shadow);
+  padding:18px 16px;
+  display:flex; flex-direction:column; gap:16px;
+}
+.verdict.is-a{--vc:var(--a); --vsoft:var(--a-soft)}
+.verdict.is-b{--vc:var(--b); --vsoft:var(--b-soft)}
+.v-head{display:flex; align-items:center; gap:14px}
+.v-badge{
+  flex:0 0 auto;
+  width:54px; height:54px;
+  background:var(--vsoft); color:var(--vc);
+  display:grid; place-items:center;
+  font-family:var(--f-mono); font-size:28px; font-weight:600;
+}
+.v-title{margin:0; font-size:19px; font-weight:700; line-height:1.3; color:var(--vc)}
+.v-reason{margin:2px 0 0; font-size:13px; color:var(--ink-2); line-height:1.55}
+
+.v-section{display:flex; flex-direction:column; gap:8px}
+.v-label{
+  font-family:var(--f-mono); font-size:11px; font-weight:600;
+  letter-spacing:.11em; text-transform:uppercase; color:var(--ink-3);
+}
+ol.todo{margin:0; padding-left:1.3em; font-size:14px; line-height:1.7}
+ol.todo li{margin-bottom:6px}
+ol.todo li:last-child{margin-bottom:0}
+ol.todo small{display:block; font-size:12.5px; color:var(--ink-2); line-height:1.6}
+
+.caution{
+  padding:11px 13px; background:var(--vsoft);
+  font-size:13px; line-height:1.65; color:var(--ink);
+  border-left:3px solid var(--vc);
+}
+.caution b{color:var(--vc)}
+
+/* ── 備考欄候補 ── */
+.notes{display:flex; flex-direction:column; gap:0}
+.note{
+  display:flex; align-items:baseline; gap:9px;
+  padding:9px 2px;
+  border-bottom:1px solid var(--rule);
+  font-size:13.5px; line-height:1.65;
+}
+.note:first-child{border-top:1px solid var(--rule)}
+.note::before{
+  content:"—"; flex:0 0 auto;
+  font-family:var(--f-mono); font-size:12px; color:var(--ink-3);
+}
+
+.restart{
+  align-self:flex-start;
+  padding:11px 18px; min-height:44px;
+  background:var(--navy); color:#fff;
+  border:0; font:inherit; font-size:14px; font-weight:700;
+  cursor:pointer;
+}
+:root[data-theme="dark"] .restart,
+:root:not([data-theme="light"]) .restart{color:var(--ground)}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]) .restart{color:#fff}
+}
+.restart:hover{background:var(--navy-deep)}
+
+/* ── footer ── */
+footer{
+  border-top:1px solid var(--rule); padding-top:16px;
+  display:flex; flex-direction:column; gap:12px;
+  font-size:12.5px; line-height:1.7; color:var(--ink-2);
+}
+.principle{
+  padding:11px 13px; background:var(--surface);
+  border:1px solid var(--rule); border-left:3px solid var(--b);
+  font-size:13px; line-height:1.65; color:var(--ink);
+}
+.principle b{color:var(--b)}
+footer a{color:var(--navy)}
+.fine{font-size:11.5px; color:var(--ink-3); line-height:1.6}
+
+@media (prefers-reduced-motion: reduce){
+  *{transition:none !important; animation:none !important; scroll-behavior:auto !important}
+}
+</style>
+<style>:root{color-scheme:light dark} img{max-width:100%} [hidden]{display:none!important}</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="masthead">
+    <div class="eyebrow">医療安全管理室</div>
+    <h1>画像診断レポート 判定ガイド</h1>
+    <p class="lede">配布リストの1件ごとに、A・Bのどちらかを決めるための手順です。設問に答えると判定と次にすることが出ます。</p>
+    <div class="privacy"><b>患者情報は入力しないでください。</b>このガイドは設問に答えるだけの道具です。入力欄はなく、操作内容はどこにも保存・送信されません。</div>
+  </header>
+
+  <nav class="trail" id="trail" aria-label="答えた設問"></nav>
+
+  <main id="stage"></main>
+
+  <footer>
+    <div class="principle"><b>迷ったら「B」で構いません。</b>Bは医療安全管理室が受け取り、担当医師と一緒に内容を確認します。「本当にBでよかったのか」を心配する必要はありません。</div>
+    <div>問い合わせ：医療安全管理室　<a href="mailto:tomyanzen@kcho.jp">tomyanzen@kcho.jp</a>　内線3311</div>
+    <div class="fine">正式な手順は配布の「判定チェックシート（レビュワー用）」が基準です。このガイドはその判定フローを画面にしたものです。</div>
+  </footer>
+</div>
+
+<script>
+const NODES = {
+  q1:{
+    mark:"Q1",
+    q:"レポートに「思わぬ異常所見」を示す記載がありますか？",
+    hint:"結節・腫瘤・悪性腫瘍の疑い・精査推奨 などの記載を探してください。",
+    help:{
+      title:"「思わぬ異常所見」とは",
+      html:`<p>検査の目的とは別に、偶然見つかった異常のことです。主に悪性腫瘍の疑いを指します。</p>
+            <p>次のような言葉が手がかりになります。</p>
+            <div class="kw"><span>結節</span><span>腫瘤</span><span>腫瘍</span><span>占拠性病変・SOL</span><span>癌・がん</span><span>すりガラス影・GGO・GGN</span><span>リンパ節腫大・腫脹</span><span>精査推奨</span><span>要再検</span><span>フォロー推奨</span></div>`
+    },
+    opts:[
+      {label:"ない", sub:"そうした記載は見当たらない", next:"a_none"},
+      {label:"ある", sub:"該当しそうな記載がある", next:"q2"}
+    ]
+  },
+  q2:{
+    mark:"Q2",
+    q:"その所見は、診療の中で認識されていましたか？",
+    hint:"カルテ記載・その後のオーダー・他科紹介記録・患者説明記録などで確認します。",
+    help:{
+      title:"「認識されていた」とは",
+      html:`<p>レポートの所見について、診療側が気づいていた記録があることです。</p>
+            <ul><li>カルテに所見への言及がある</li><li>その後に関連する検査がオーダーされている</li><li>他科へ紹介した記録がある</li><li>患者さんへ説明した記録がある</li></ul>`
+    },
+    opts:[
+      {label:"はい", sub:"認識されていた記録がある", next:"q3"},
+      {label:"いいえ", sub:"認識された記録が見当たらない", next:"q2b"}
+    ]
+  },
+  q2b:{
+    mark:"Q2-1",
+    q:"患者さんが亡くなっており、その所見が死因と明らかに無関係ですか？",
+    hint:"他疾患での死亡が確認でき、当該所見が経過に関与していないとカルテから判断できる場合です。",
+    help:{
+      title:"「死因と明らかに無関係」とは",
+      html:`<p>他の疾患で亡くなったことが確認でき、当該所見がその経過に関与していないとカルテから判断できる場合を指します。</p>
+            <p>少しでも関与の可能性があると感じたら「いいえ／判断できない」を選んでください。医療安全管理室が引き取ります。</p>`
+    },
+    opts:[
+      {label:"はい", sub:"死因と無関係と判断できる", next:"a_death"},
+      {label:"いいえ／判断できない", sub:"ご存命、または判断がつかない", next:"b_unrec"}
+    ]
+  },
+  q3:{
+    mark:"Q3",
+    q:"その所見に対して、対応がなされていますか？",
+    hint:"対応までに時間がかかっていても「なされている」に含みます。",
+    help:{
+      title:"「対応がなされている」とは",
+      html:`<ul><li>精査を実施した</li><li>フォローの画像検査を撮った</li><li>他科へ紹介した</li><li>経過観察の方針が書かれている</li></ul>
+            <p style="margin-top:8px">レポートから対応までに時間がかかっていても「なされている」に含めて構いません。</p>`
+    },
+    opts:[
+      {label:"はい", sub:"対応の記録がある", next:"a_done"},
+      {label:"いいえ", sub:"対応の記録が見当たらない", next:"q4"}
+    ]
+  },
+  q4:{
+    mark:"Q4",
+    q:"その所見への対応が不要と判断できますか？",
+    hint:"良性確定・既知で安定・終末期方針・患者さんの意思 などが記録から読み取れる場合です。",
+    help:{
+      title:"「対応が不要と判断できる」とは",
+      html:`<ul><li>良性と確定している</li><li>その後の検査や経過でフォロー不要と判断できる</li><li>既知の所見で安定している</li><li>終末期／看取りの方針である</li><li>患者さんの意思で検査しない方針である</li></ul>`
+    },
+    opts:[
+      {label:"はい", sub:"対応不要と判断できる", next:"a_nocare"},
+      {label:"いいえ／判断できない", sub:"判断がつかない", next:"b_nocare"}
+    ]
+  }
+};
+
+const A_TODO = [
+  {t:"配布リストの「判定」欄に <b>A</b> と記入する"},
+  {t:"電子カルテの掲示板に確認記録を残す", s:"掲示板を開き「メッセージ有効期限」の✓を外してから登録します。同じ患者さんで2件目以降は、対象検査日も書き添えてください。"}
+];
+const B_TODO = [
+  {t:"配布リストの「判定」欄に <b>B</b> と記入し、備考欄に理由を書く", s:"短い一文で構いません。下の候補が使えます。"},
+  {t:"電子カルテの掲示板に確認記録を残す", s:"掲示板を開き「メッセージ有効期限」の✓を外してから登録します。"},
+  {t:"医療安全管理室へ連絡する", s:"tomyanzen@kcho.jp ／ 内線3311"}
+];
+
+const RESULTS = {
+  a_none:{v:"A", title:"問題なし", why:"「思わぬ異常所見」を示す記載がないため", todo:A_TODO},
+  a_death:{v:"A", title:"問題なし", why:"死亡例で、当該所見が死因と明らかに無関係と判断できるため", todo:A_TODO},
+  a_done:{v:"A", title:"問題なし", why:"所見が認識され、対応がとられているため", todo:A_TODO},
+  a_nocare:{v:"A", title:"問題なし", why:"所見への対応が不要と判断できるため", todo:A_TODO},
+  b_unrec:{
+    v:"B", title:"未対応の疑い", why:"所見が認識された記録が見当たらないため", todo:B_TODO,
+    notes:["所見に対するカルテ記載が見当たらない","悪性腫瘍疑いの記載あるもフォローなし","転院先不明で経過を追えない","判断に迷った"]
+  },
+  b_nocare:{
+    v:"B", title:"未対応の疑い", why:"対応の記録がなく、対応不要とも判断できないため", todo:B_TODO,
+    notes:["所見は認識されているが対応の記録がない","対応が必要か判断できない","通院終了で対応記録が追えない","判断に迷った"]
+  }
+};
+
+const trailEl = document.getElementById("trail");
+const stageEl = document.getElementById("stage");
+let path = [];      // [{id, oi}]
+let current = "q1";
+
+function esc(s){ return s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+function render(scroll){
+  // 履歴
+  trailEl.innerHTML = "";
+  path.forEach((step, i) => {
+    const n = NODES[step.id];
+    const b = document.createElement("button");
+    b.className = "trail-item";
+    b.type = "button";
+    b.innerHTML = `<span class="trail-mark">${n.mark}</span>
+      <span class="trail-ans">${esc(n.opts[step.oi].label)}</span>
+      <span class="trail-back">選び直す</span>`;
+    b.addEventListener("click", () => { path = path.slice(0, i); current = step.id; render(true); });
+    trailEl.appendChild(b);
+  });
+
+  // 現在地
+  stageEl.innerHTML = "";
+  if (NODES[current]) renderQuestion(NODES[current]);
+  else renderResult(RESULTS[current]);
+
+  if (scroll) {
+    const t = stageEl.firstElementChild;
+    if (t) t.scrollIntoView({behavior:"smooth", block:"nearest"});
+  }
+}
+
+function renderQuestion(n){
+  const sec = document.createElement("section");
+  sec.className = "panel";
+  sec.innerHTML = `
+    <div class="q-mark">${n.mark}</div>
+    <h2 class="q-text">${esc(n.q)}</h2>
+    <p class="q-hint">${esc(n.hint)}</p>
+    <div class="opts"></div>
+    <details class="help">
+      <summary>${esc(n.help.title)}</summary>
+      <div class="help-body">${n.help.html}</div>
+    </details>`;
+  const box = sec.querySelector(".opts");
+  n.opts.forEach((o, oi) => {
+    const b = document.createElement("button");
+    b.className = "opt"; b.type = "button";
+    b.innerHTML = `<span class="opt-label">${esc(o.label)}</span><span class="opt-sub">${esc(o.sub)}</span>`;
+    b.addEventListener("click", () => {
+      path.push({id:current, oi});
+      current = o.next;
+      render(true);
+    });
+    box.appendChild(b);
+  });
+  stageEl.appendChild(sec);
+}
+
+function renderResult(r){
+  const sec = document.createElement("section");
+  sec.className = "verdict " + (r.v === "A" ? "is-a" : "is-b");
+  sec.innerHTML = `
+    <div class="v-head">
+      <div class="v-badge">${r.v}</div>
+      <div>
+        <h2 class="v-title">${r.v}：${esc(r.title)}</h2>
+        <p class="v-reason">${esc(r.why)}</p>
+      </div>
+    </div>
+    <div class="v-section">
+      <div class="v-label">次にすること</div>
+      <ol class="todo">${r.todo.map(x => `<li>${x.t}${x.s ? `<small>${esc(x.s)}</small>` : ""}</li>`).join("")}</ol>
+    </div>`;
+
+  if (r.notes){
+    const s = document.createElement("div");
+    s.className = "v-section";
+    s.innerHTML = `<div class="v-label">備考欄に書く文の候補</div><div class="notes"></div>`;
+    const box = s.querySelector(".notes");
+    r.notes.forEach(txt => {
+      const row = document.createElement("div");
+      row.className = "note";
+      row.append("「" + txt + "」");
+      box.appendChild(row);
+    });
+    sec.appendChild(s);
+
+    const c = document.createElement("div");
+    c.className = "caution";
+    c.innerHTML = `<b>患者さんへ直接連絡しないでください。</b>対応方針は医療安全管理室が担当診療科と協議して決めます。`;
+    sec.appendChild(c);
+  }
+
+  const rs = document.createElement("button");
+  rs.className = "restart"; rs.type = "button"; rs.textContent = "次の1件を判定する";
+  rs.addEventListener("click", () => { path = []; current = "q1"; render(true); });
+  sec.appendChild(rs);
+
+  stageEl.appendChild(sec);
+}
+
+render(false);
+</script>
+</body>
+</html>
