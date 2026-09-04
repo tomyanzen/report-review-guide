@@ -234,6 +234,17 @@ ol.todo small{display:block; font-size:12.5px; color:var(--ink-2); line-height:1
 }
 .caution b{color:var(--vc)}
 
+/* ── 掲示板の記載例 ── */
+.board{
+  padding:11px 13px;
+  background:var(--surface-2);
+  border:1px solid var(--rule);
+  font-size:12.5px; line-height:1.85;
+  white-space:pre-wrap;
+  overflow-x:auto;
+}
+.board-note{font-size:12px; line-height:1.6; color:var(--ink-2)}
+
 /* ── 備考欄候補 ── */
 .notes{display:flex; flex-direction:column; gap:0}
 .note{
@@ -288,7 +299,7 @@ footer a{color:var(--navy)}
   <header class="masthead">
     <div class="eyebrow">医療安全管理室</div>
     <h1>画像診断レポート 判定ガイド</h1>
-    <p class="lede">配布リストの1件ごとに、A・Bのどちらかを決めるための手順です。設問に答えると判定と次にすることが出ます。</p>
+    <p class="lede">配布リストの検査1件ごとに、A・Bのどちらかを決めるための手順です。設問に答えると判定と次にすることが出ます。リストは患者氏名順・検査日順に並んでいるので、同じ患者さんの検査は続けて確認してください。</p>
     <div class="privacy"><b>患者情報は入力しないでください。</b>このガイドは設問に答えるだけの道具です。入力欄はなく、操作内容はどこにも保存・送信されません。</div>
   </header>
 
@@ -377,15 +388,25 @@ const NODES = {
   }
 };
 
+const BOARD_STEP = {
+  t:"その患者さんの分をすべて判定したら、掲示板にまとめて記録する",
+  s:"掲示板を開き「メッセージ有効期限」の✓を外してから登録します。同じ患者さんに対象検査が複数あるときも、1回の記録にまとめます。"
+};
 const A_TODO = [
-  {t:"配布リストの「判定」欄に <b>A</b> と記入する"},
-  {t:"電子カルテの掲示板に確認記録を残す", s:"掲示板を開き「メッセージ有効期限」の✓を外してから登録します。同じ患者さんで2件目以降は、対象検査日も書き添えてください。"}
+  {t:"配布リストの「判定」欄に <b>A</b> と記入する", s:"記入は検査1件ごとに1行です。"},
+  BOARD_STEP
 ];
 const B_TODO = [
-  {t:"配布リストの「判定」欄に <b>B</b> と記入し、備考欄に理由を書く", s:"短い一文で構いません。下の候補が使えます。"},
-  {t:"電子カルテの掲示板に確認記録を残す", s:"掲示板を開き「メッセージ有効期限」の✓を外してから登録します。"},
+  {t:"配布リストの「判定」欄に <b>B</b> と記入し、備考欄に理由を書く", s:"記入は検査1件ごとに1行です。理由は短い一文で構いません。下の候補が使えます。"},
+  BOARD_STEP,
   {t:"医療安全管理室へ連絡する", s:"tomyanzen@kcho.jp ／ 内線3311"}
 ];
+const BOARD_SAMPLE =
+  "【遡及的レビュー済み】\n" +
+  "2022年3月4日：A\n" +
+  "2023年7月11日：B\n" +
+  "2024年1月20日：A\n" +
+  "確認日：YYYY年M月D日　確認者：（氏名）";
 
 const RESULTS = {
   a_none:{v:"A", title:"問題なし", why:"「思わぬ異常所見」を示す記載がないため", todo:A_TODO},
@@ -476,6 +497,11 @@ function renderResult(r){
     <div class="v-section">
       <div class="v-label">次にすること</div>
       <ol class="todo">${r.todo.map(x => `<li>${x.t}${x.s ? `<small>${esc(x.s)}</small>` : ""}</li>`).join("")}</ol>
+    </div>
+    <div class="v-section">
+      <div class="v-label">掲示板の記載例</div>
+      <div class="board">${esc(BOARD_SAMPLE)}</div>
+      <div class="board-note">検査日は配布リストの並び順（古い順）で、1行に1件ずつ書きます。判定が同じ場合もまとめず、検査日ごとに記載してください。</div>
     </div>`;
 
   if (r.notes){
@@ -498,7 +524,7 @@ function renderResult(r){
   }
 
   const rs = document.createElement("button");
-  rs.className = "restart"; rs.type = "button"; rs.textContent = "次の1件を判定する";
+  rs.className = "restart"; rs.type = "button"; rs.textContent = "次の検査を判定する";
   rs.addEventListener("click", () => { path = []; current = "q1"; render(true); });
   sec.appendChild(rs);
 
