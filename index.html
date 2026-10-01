@@ -399,7 +399,7 @@ const A_TODO = [
 const B_TODO = [
   {t:"配布リストの「判定」欄に <b>B</b> と記入し、備考欄に理由を書く", s:"記入は検査1件ごとに1行です。理由は短い一文で構いません。下の候補が使えます。"},
   BOARD_STEP,
-  {t:"医療安全管理室へメールで連絡する", s:"tomyanzen@kcho.jp"}
+  {t:"B判定のたびの連絡は不要です", s:"担当分がすべて終わったら、医療安全管理室（tomyanzen@kcho.jp）と自科の診療科長にメールで完了を報告し、B判定の件数を書き添えてください。"}
 ];
 const BOARD_SAMPLE =
   "【遡及的レビュー済み】\n" +
@@ -519,7 +519,7 @@ function renderResult(r){
 
     const c = document.createElement("div");
     c.className = "caution";
-    c.innerHTML = `<b>患者さんへ直接連絡しないでください。</b>医療安全管理室が内容を再確認して責任診療科を決め、その診療科長の主導で対応します。`;
+    c.innerHTML = `<b>患者さんへ直接連絡しないでください。</b>医療安全管理室が内容を再確認して責任診療科を決め、診療科長の主導で、責任診療科の医師から患者さんへ連絡します。`;
     sec.appendChild(c);
   }
 
