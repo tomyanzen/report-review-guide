@@ -401,6 +401,12 @@ const B_TODO = [
   BOARD_STEP,
   {t:"Bの報告は、担当分の完了時にまとめて", s:"担当分がすべて終わったら、医療安全管理室（tomyanzen@kcho.jp）と自科の診療科長にメールで完了を報告し、B判定の件数を書き添えてください。ただし、今すぐ対応が必要と考えられる事例は、これまでどおり即時に医療安全管理室へメールで報告してください。"}
 ];
+const URGENT = [
+  "比較的最近（目安：1年以内）の検査で、悪性腫瘍が強く疑われる所見が手つかず",
+  "その後の検査で、病変の増大・新たな転移・胸水や腹水などが指摘されている",
+  "脊髄の圧迫、気道や太い血管の狭窄、脳腫瘍など、急な悪化につながりうる部位",
+  "その後のカルテに、関係しそうな症状（体重減少・血痰・痛み・黄疸など）の記載がある"
+];
 const BOARD_SAMPLE =
   "【遡及的レビュー済み】\n" +
   "2022年3月4日：A\n" +
@@ -516,6 +522,20 @@ function renderResult(r){
       box.appendChild(row);
     });
     sec.appendChild(s);
+
+    const u = document.createElement("div");
+    u.className = "v-section";
+    u.innerHTML = `<div class="v-label">すぐに報告が必要な事例の目安</div>
+      <div class="board-note">次のいずれかに当てはまり、患者さんがご存命で、まだ精査・治療につながっていない場合は、完了を待たずに医療安全管理室（tomyanzen@kcho.jp）へメールで報告してください。</div>
+      <div class="notes"></div>`;
+    const ub = u.querySelector(".notes");
+    URGENT.forEach(txt => {
+      const row = document.createElement("div");
+      row.className = "note";
+      row.append(txt);
+      ub.appendChild(row);
+    });
+    sec.appendChild(u);
 
     const c = document.createElement("div");
     c.className = "caution";
