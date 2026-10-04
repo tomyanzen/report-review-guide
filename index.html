@@ -316,6 +316,20 @@ footer a{color:var(--navy)}
 
 <script>
 const NODES = {
+  q0:{
+    mark:"Q0",
+    q:"他院からの依頼で、画像検査とレポート作成のみを行った検査ですか？",
+    hint:"開業医や、PETなどの設備がない施設からの依頼で、当院では検査と読影だけを行い、診療はしていないものです。",
+    help:{
+      title:"「検査とレポート作成のみ」とは",
+      html:`<p>当院の患者さんとしては診療しておらず、検査と読影だけを請け負ったものです。今回の確認の対象外ですので、Aとして、備考欄に「他院依頼・読影のみ」と書いてください。</p>
+            <p>当院の診療の中で依頼された検査は、「いいえ」を選んでください。</p>`
+    },
+    opts:[
+      {label:"いいえ", sub:"当院で診療している患者さんの検査", next:"q1"},
+      {label:"はい", sub:"他院依頼で、検査とレポート作成のみ", next:"a_other"}
+    ]
+  },
   q1:{
     mark:"Q1",
     q:"レポートに「思わぬ異常所見」を示す記載がありますか？",
@@ -396,6 +410,10 @@ const A_TODO = [
   {t:"配布リストの「判定」欄に <b>A</b> と記入する", s:"記入は検査1件ごとに1行です。"},
   BOARD_STEP
 ];
+const A_OTHER_TODO = [
+  {t:"配布リストの「判定」欄に <b>A</b> と記入し、備考欄に「他院依頼・読影のみ」と書く", s:"記入は検査1件ごとに1行です。"},
+  BOARD_STEP
+];
 const B_TODO = [
   {t:"配布リストの「判定」欄に <b>B</b> と記入し、備考欄に理由を書く", s:"記入は検査1件ごとに1行です。理由は短い一文で構いません。下の候補が使えます。"},
   BOARD_STEP,
@@ -415,6 +433,7 @@ const BOARD_SAMPLE =
   "確認日：YYYY年M月D日　確認者：（氏名）";
 
 const RESULTS = {
+  a_other:{v:"A", title:"今回の確認の対象外", why:"他院からの依頼で、検査とレポート作成のみを行ったものであるため", todo:A_OTHER_TODO},
   a_none:{v:"A", title:"問題なし", why:"「思わぬ異常所見」を示す記載がないため", todo:A_TODO},
   a_death:{v:"A", title:"問題なし", why:"死亡例で、当該所見が死因と明らかに無関係と判断できるため", todo:A_TODO},
   a_done:{v:"A", title:"問題なし", why:"所見が認識され、対応がとられているため", todo:A_TODO},
@@ -432,7 +451,7 @@ const RESULTS = {
 const trailEl = document.getElementById("trail");
 const stageEl = document.getElementById("stage");
 let path = [];      // [{id, oi}]
-let current = "q1";
+let current = "q0";
 
 function esc(s){ return s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
 
@@ -545,7 +564,7 @@ function renderResult(r){
 
   const rs = document.createElement("button");
   rs.className = "restart"; rs.type = "button"; rs.textContent = "次の検査を判定する";
-  rs.addEventListener("click", () => { path = []; current = "q1"; render(true); });
+  rs.addEventListener("click", () => { path = []; current = "q0"; render(true); });
   sec.appendChild(rs);
 
   stageEl.appendChild(sec);
