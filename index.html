@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<meta name="description" content="画像診断レポート遡及的確認プロジェクトのレビュワー向け A・B判定ガイド（神戸市立医療センター中央市民病院 医療安全管理室）">
+<meta name="description" content="画像診断レポート遡及的確認プロジェクトのレビュワー向け A・B判定ガイド（医療安全管理室）">
 <meta name="theme-color" content="#1B4B7A">
 <title>画像診断レポート判定ガイド</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -322,7 +322,7 @@ footer a{color:var(--navy)}
 
   <footer>
     <div class="principle"><b>迷ったら「B」で構いません。</b>Bは医療安全管理室が受け取り、本当に対応が必要かを改めて確認します。「本当にBでよかったのか」を心配する必要はありません。</div>
-    <div>問い合わせ：医療安全管理室（メール）　<a href="mailto:tomyanzen@kcho.jp">tomyanzen@kcho.jp</a></div>
+    <div>問い合わせ：医療安全管理室（メール）　tomyanzen[at]kcho.jp　※[at]は「アットマーク」に置き換えてください</div>
     <div class="fine">4つの所見（肺結節・膵IPMN・甲状腺結節・副腎腫瘤）の基準は【案】です（2026年10月9日版）。目安であり、最終判断はレビュワーと診療科長が行います。<br>正式な手順は配布の「判定チェックシート（レビュワー用）」が基準です。このガイドはその判定フローを画面にしたものです。</div>
   </footer>
 </div>
@@ -561,7 +561,7 @@ const A_OTHER_TODO = [
 const B_TODO = [
   {t:"配布リストの「判定」欄に <b>B</b> と記入し、備考欄に理由を書く", s:"記入は検査1件ごとに1行です。理由は短い一文で構いません。下の候補が使えます。"},
   BOARD_STEP,
-  {t:"Bの報告は、担当分の完了時にまとめて", s:"担当分がすべて終わったら、医療安全管理室（tomyanzen@kcho.jp）と自科の診療科長にメールで完了を報告し、B判定の件数を書き添えてください。ただし、今すぐ対応が必要と考えられる事例は、これまでどおり即時に医療安全管理室へメールで報告してください。"}
+  {t:"Bの報告は、担当分の完了時にまとめて", s:"担当分がすべて終わったら、医療安全管理室（tomyanzen[at]kcho.jp）と自科の診療科長にメールで完了を報告し、B判定の件数を書き添えてください。ただし、今すぐ対応が必要と考えられる事例は、これまでどおり即時に医療安全管理室へメールで報告してください。"}
 ];
 const URGENT = [
   "比較的最近（目安：1年以内）の検査で、悪性腫瘍が強く疑われる所見が手つかず",
@@ -704,7 +704,7 @@ function renderResult(r){
     const u = document.createElement("div");
     u.className = "v-section";
     u.innerHTML = `<div class="v-label">すぐに報告が必要な事例の目安</div>
-      <div class="board-note">次のいずれかに当てはまり、患者さんがご存命で、まだ精査・治療につながっていない場合は、完了を待たずに医療安全管理室（tomyanzen@kcho.jp）へメールで報告してください。</div>
+      <div class="board-note">次のいずれかに当てはまり、患者さんがご存命で、まだ精査・治療につながっていない場合は、完了を待たずに医療安全管理室（tomyanzen[at]kcho.jp）へメールで報告してください。</div>
       <div class="notes"></div>`;
     const ub = u.querySelector(".notes");
     URGENT.forEach(txt => {
